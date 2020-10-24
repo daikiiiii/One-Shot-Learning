@@ -28,8 +28,6 @@ void printPriceMatrix(double ** matrix, int rows, int cols) {
 
 double ** inverse(double ** matrix, int rows, int cols) {
 
-  //printf("do you break inside the inverse?\n");
-
     int p , i, j;
     double ** identity_matrix = (double **)malloc(rows * sizeof(double *));
     for (i = 0; i < rows; i++) {
@@ -45,10 +43,6 @@ double ** inverse(double ** matrix, int rows, int cols) {
             }
         }
     }
-    
-    // printf("made it past the identity matrix\n");
-    
-    // This is where the implementation of gaussian elimination will occur
 
     int ct;
 
@@ -56,7 +50,6 @@ double ** inverse(double ** matrix, int rows, int cols) {
 
     for (p = 0; p < rows; p++) {
         f = matrix[p][p];
-        // this for loop divides every element in row p by f
         for (ct = 0; ct < rows; ct++) {
             matrix[p][ct] /= f;
             identity_matrix[p][ct] /= f;
@@ -70,14 +63,10 @@ double ** inverse(double ** matrix, int rows, int cols) {
         }
     }
 
-    // printf("made it past the upper triangular setup\n");
-
     for (p = rows - 1; p >= 0; p--) {
         for (i = p-1; i >= 0; i--) {
-	  // printf("made it through bois\n");
 	    f = matrix[i][p];
             for (ct = 0; ct < rows; ct++) {
-	      // printf("made it rhough the next one bois\n");
                 matrix[i][ct] -= (f * matrix[p][ct]);
                 identity_matrix[i][ct] -= (f * identity_matrix[p][ct]); 
             }
@@ -142,9 +131,6 @@ int main(int argc, char ** argv) {
     fscanf(file1, " %d", &num_of_attributes);
     fscanf(file1, " %d", &num_of_houses);
    
-    //printf("train: %s\n", train);
-    //printf("num of attributes: %d\n", num_of_attributes);
-    //printf("num of houses: %d\n", num_of_houses);
 
     double ** matrix_x = malloc( num_of_houses * sizeof(double *));
     double ** vector_y = malloc( num_of_houses * sizeof(double *));
@@ -168,24 +154,14 @@ int main(int argc, char ** argv) {
     // loop only four times, leaving the next scan for Y, which will occur outside
     // the nested for loop, but inside the parent for loop. 
 
-    //printf("do you reach the loop?\n");
 
     for (i = 0; i < num_of_houses; i++) {
-      //printf("breaks from reading the input of the file\n");
-        //fscanf(file1, "%lf", matrix_x[i][0]);
         matrix_x[i][0] = 1;
         for (j = 1; j < num_of_attributes + 1; j++) {
-	  //printf("how many loops?\n");
             fscanf(file1, "%lf", &matrix_x[i][j]);
         }
         fscanf(file1, "%lf", &vector_y[i][0]);
     }
-    
-    //printf("X: \n");
-    //printMatrix(matrix_x, num_of_houses, num_of_attributes + 1);
-
-    //printf("Y: \n");
-    //printMatrix(vector_y, num_of_houses, 1);
 
     double ** transpose_x = malloc((num_of_attributes+1) * sizeof(double *));
 
@@ -197,8 +173,7 @@ int main(int argc, char ** argv) {
 
     transpose_x = transpose(matrix_x, transpose_x,num_of_houses, num_of_attributes+1);
 
-    // printf("Transpose of X: \n");
-    // printMatrix(transpose_x, num_of_attributes + 1, num_of_houses);
+   
 
     double ** product_x = malloc((num_of_attributes + 1)*sizeof(double *));
     for (i = 0; i < num_of_attributes+1; i++) {
@@ -209,8 +184,7 @@ int main(int argc, char ** argv) {
 
     product_x = multiply(transpose_x, matrix_x, product_x, num_of_attributes + 1, num_of_attributes + 1, num_of_houses);
 
-    //printf("X^T(X): \n");
-    //printMatrix(product_x, num_of_attributes + 1, num_of_attributes + 1);
+   
 
     
     double ** inverse_x = malloc((num_of_attributes + 1) * sizeof(double *));
@@ -222,11 +196,7 @@ int main(int argc, char ** argv) {
 
     inverse_x = inverse(product_x, num_of_attributes + 1, num_of_attributes + 1);
 
-    //printf("inverse of product: \n");
-    //printMatrix(inverse_x, num_of_attributes+1, num_of_attributes+1);
- 
-    // by this point, all functions have been checked, and all seem to work. if it result isnt correct, come back here and check each
-    // function call and check for possible edge cases
+    
    
     double ** result_x = malloc((num_of_attributes + 1) * sizeof(double *));
     for (i = 0; i < num_of_attributes + 1; i++) {
@@ -259,8 +229,7 @@ int main(int argc, char ** argv) {
       return 0;
     }
 
-    //printf("att2: %d\n", num_of_attributes_2);
-    //printf("ho2: %d\n", num_of_houses_2);
+    
 
     double ** estimator_x = malloc(num_of_houses_2 * sizeof(double *));
     double ** estimator_y = malloc(num_of_houses_2 * sizeof(double *));
@@ -280,17 +249,13 @@ int main(int argc, char ** argv) {
       }
     }
     
-    //printf("estimator_x: \n");
-    //printMatrix(estimator_x, num_of_houses_2, num_of_attributes_2 + 1);
 
     estimator_y = multiply(estimator_x, vector_w, estimator_y, num_of_houses_2, 1, num_of_attributes_2+1);
 
-    //printf("pls be to god: \n");
     printPriceMatrix(estimator_y, num_of_houses_2, 1);
 
     fclose(file2);
-
-    //printf("reached the end/n");
+	
     return 0;
 
 }
