@@ -83,8 +83,6 @@ double ** inverse(double ** matrix, int rows, int cols) {
             }
         }
     }
-    
-    // printf("or is c just an asshole\n");
 
     return identity_matrix;
 
